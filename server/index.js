@@ -18,11 +18,15 @@ app.use(morgan('dev'))
 
 io.on("connection", (socket) => {
     console.log(socket.id)
-    socket.broadcast.emit('message', "Joder")
+
     socket.on('message', function(message) {
         console.log(message)
-        socket.broadcast.emit('messageFront', message)
+        socket.broadcast.emit("message", {
+            body: message,
+            from: socket.id
+        })
     })
+
 })
 
 server.listen(PORT)
