@@ -1,49 +1,47 @@
 import './App.css';
 import io from "socket.io-client";
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const socket = io('http://localhost:4000/')
 
 function App() {
 
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [contador, setContador] = useState(0);
+  const numero = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    socket.emit('message', message)
-    setMessages([...messages, {body: message, from: "Me"}])
-    setMessage("")
+    socket.emit('contador', numero.current.value);
+  }
+
+  const timer = () => { 
+    console.log("Timer: " + contador)   
+    setContador(contador - 1);
   }
 
   useEffect (() => {
-    const receiveMessage = (message) => {
-      setMessages([...messages, message])
+    const receiveMessage = (contador) => {
+      setContador(contador);
+      setInterval(timer, 1000)    
     }
-    socket.on('message', receiveMessage)  
+
+    socket.on('cont', receiveMessage);
+
     return () => {
-      socket.off("message", receiveMessage)
+      socket.off("cont", receiveMessage);
     }
-  }, [messages])
+
+  }, [contador])
 
   return (
     <div className="App">
 
-      <form onSubmit={handleSubmit}>
-        <input type="text" onChange={e => setMessage(e.target.value)} value={message}/>
+      <form onSubmit={e => handleSubmit(e)}>
+        <input type="text" ref={numero}/>
         <button>Send</button>
       </form>
 
-      {
-        messages.map((message, index) => {
-          return (
-          <div key={index}>
-            <p>{message.body}</p>
-            <p>{message.from}</p>
-          </div>
-          )
-        })
-      }
+      <h1>Contador: {contador}</h1>
 
     </div>
   );

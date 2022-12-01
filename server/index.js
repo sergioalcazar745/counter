@@ -19,12 +19,10 @@ app.use(morgan('dev'))
 io.on("connection", (socket) => {
     console.log(socket.id)
 
-    socket.on('message', function(message) {
-        console.log(message)
-        socket.broadcast.emit("message", {
-            body: message,
-            from: socket.id
-        })
+    socket.on('contador', function(contador) {
+        console.log(contador)
+        //socket.broadcast.emit("cont", contador)
+        io.emit("cont", contador)
     })
 
 })
