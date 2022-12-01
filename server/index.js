@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
                 numero = numero - 1;
                 io.emit("cont", numero)
             }else{
-                console.log("Se acabó")
+                clearInterval()
             }
         } ,1000)
     })
