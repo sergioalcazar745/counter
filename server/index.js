@@ -17,14 +17,17 @@ app.use(cors())
 app.use(morgan('dev'))
 
 io.on("connection", (socket) => {
-    console.log(socket.id)
 
     socket.on('contador', function( contador) {
-        console.log(contador)
-        app.set("conta",contador)
-        
-        //socket.broadcast.emit("cont", contador)
-        io.emit("cont", app.get("conta"))
+        var numero = parseInt(contador)
+        setInterval(() => {
+            if(numero != 0){
+                numero = numero - 1;
+                io.emit("cont", numero)
+            }else{
+                console.log("Se acabó")
+            }
+        } ,1000)
     })
 
 })
