@@ -17,11 +17,14 @@ function App() {
   const timer = () => { 
     console.log("Timer: " + contador)   
     setContador(contador - 1);
+    console.log(contador)
   }
 
   useEffect (() => {
+    console.log(contador)
     const receiveMessage = (contador) => {
       setContador(contador);
+      console.log(contador)
       setInterval(timer, 1000)    
     }
 
