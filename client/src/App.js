@@ -8,11 +8,22 @@ const secConverter = require("seconds-converter")
 function App() {
 
   const [clock, setClock] = useState(0);
+  const [segundos, setSegundos] = useState(0);
   const numero = useRef();
 
-  const handleSubmit = (e) => {
+  const comenzar = (e) => {
     e.preventDefault();
     socket.emit('contador', numero.current.value);
+  }
+
+  const pausar = (e) => {
+    e.preventDefault();
+    socket.emit('contador', "pausa");
+  }
+
+  const reanudar = (e) => {
+    e.preventDefault();
+    socket.emit('contador', segundos);
   }
 
   const timer = (numero) => {
@@ -22,7 +33,8 @@ function App() {
 
   useEffect (() => {
     const receiveMessage = (segundos) => {
-      timer(segundos)   
+      setSegundos(segundos);
+      timer(segundos);
     }
 
     socket.on('cont', receiveMessage);
@@ -36,9 +48,11 @@ function App() {
   return (
     <div className="App">
 
-      <form onSubmit={e => handleSubmit(e)}>
+      <form onSubmit={e => comenzar(e)}>
         <input type="text" ref={numero}/>
         <button>Send</button>
+        <button type='button' onClick={e => pausar(e)}>Pausar</button>
+        <button type='button' onClick={e => reanudar(e)}>Reanudar</button>
       </form>
 
       <h1>Reloj: {clock.hours}:{clock.minutes}:{clock.seconds}</h1>

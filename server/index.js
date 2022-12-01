@@ -15,19 +15,26 @@ const io = new SocketServer(server, {
 
 app.use(cors())
 app.use(morgan('dev'))
+var intervalo = "";
+
 
 io.on("connection", (socket) => {
-
+    console.log("Carga")
     socket.on('contador', function( contador) {
-        var numero = parseInt(contador)
-        setInterval(() => {
-            if(numero != 0){
-                numero = numero - 1;
-                io.emit("cont", numero)
-            }else{
-                clearInterval()
-            }
-        } ,1000)
+        if(contador != "pausa"){
+            var numero = contador
+            intervalo = setInterval(() => {
+                if(numero != 0){
+                    numero = numero - 1;
+                    io.emit("cont", numero)
+                }else{
+                    clearInterval(intervalo)
+                }          
+            } ,1000)
+        }else{
+            clearInterval(intervalo)
+        }         
+
     })
 
 })
