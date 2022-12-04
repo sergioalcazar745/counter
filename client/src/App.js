@@ -37,6 +37,28 @@ function App() {
 
   const timer = (numero) => {
     const convertedTime = secConverter(numero, 'sec')
+
+    if(convertedTime.hours.toString().length == 1){
+      var stringHours = "0" + convertedTime.hours.toString();
+      convertedTime.hours = stringHours;
+    }else{
+      convertedTime.hours = convertedTime.hours.toString();
+    }
+
+    if(convertedTime.minutes.toString().length == 1){
+      var stringMinutes = "0" + convertedTime.minutes.toString();
+      convertedTime.minutes = stringMinutes;
+    }else{
+      convertedTime.minutes = convertedTime.minutes.toString();
+    }
+
+    if(convertedTime.seconds.toString().length == 1){
+      var stringSeconds = "0" + convertedTime.seconds.toString();
+      convertedTime.seconds = stringSeconds;
+    }else{
+      convertedTime.seconds = convertedTime.seconds.toString()
+    }
+
     setClock(convertedTime)
     $("#clock").show();
   }
@@ -44,7 +66,6 @@ function App() {
   useEffect (() => {
     $("#btnPausar").hide();
     $("#btnReanudar").hide();
-    $("#clock").hide();
     const receiveMessage = (segundos) => {
       setSegundos(segundos);
       timer(segundos);
@@ -61,14 +82,44 @@ function App() {
   return (
     <div className="App">
 
+      {
+        clock != 0 &&
+        <div className="clock">
+          <div className="hours">
+            <div className="first">
+              <div className="number">{clock.hours[0]}</div>
+            </div>
+            <div className="second">
+              <div className="number">{clock.hours[1]}</div>
+            </div>
+          </div>
+          <div className="tick">:</div>
+          <div className="minutes">
+            <div className="first">
+              <div className="number">{clock.minutes[0]}</div>
+            </div>
+            <div className="second">
+              <div className="number">{clock.minutes[1]}</div>
+            </div>
+          </div>
+          <div className="tick">:</div>
+          <div className="seconds">
+            <div className="first">
+              <div className="number">{clock.seconds[0]}</div>
+            </div>
+            <div className="second infinite">
+              <div className="number">{clock.seconds[1]}</div>
+            </div>
+          </div>
+        </div>
+      }
+
       <form onSubmit={e => comenzar(e)}>
         <input id='texto' type="text" ref={numero}/>
         <button id='btnEnviar'>Send</button>
         <button type='button' id='btnPausar' onClick={e => pausar(e)}>Pausar</button>
         <button type='button' id='btnReanudar' onClick={e => reanudar(e)}>Reanudar</button>
       </form>
-
-      <h1 id='clock'>Reloj: {clock.hours}:{clock.minutes}:{clock.seconds}</h1>
 
     </div>
   );
