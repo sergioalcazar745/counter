@@ -5,7 +5,6 @@ import Popper from 'popper.js';
 import { useState, useEffect, useRef } from 'react'
 
 const socket = io('http://localhost:4000/')
-const secConverter = require("seconds-converter")
 
 function App() {
 
@@ -33,6 +32,19 @@ function App() {
     socket.emit('contador', segundos);
     $("#btnPausar").show();
     $("#btnReanudar").hide();
+  }
+
+  const secConverter = (s) => {
+    let d, h, m
+
+    m = Math.floor(s / 60)
+    s = s % 60
+    h = Math.floor(m / 60)
+    m = m % 60
+    d = Math.floor(h / 24)
+    h = h % 24
+
+    return {days: d, hours: h, minutes: m, seconds: s}
   }
 
   const timer = (numero) => {
