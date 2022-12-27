@@ -4,12 +4,9 @@
   box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
+.container-home {
+  height: calc(100vh - 64px);
   width: 100%;
-}
-
-body {
   background: black;
   display: flex;
   justify-content: center;
