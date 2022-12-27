@@ -1,4 +1,4 @@
-import './App.css';
+// import './../assests/css/App.css';
 import io from "socket.io-client";
 import $ from 'jquery';
 import Popper from 'popper.js';
@@ -92,7 +92,7 @@ function App() {
   }, [])
 
   return (
-    <div className="App">
+    <div>
 
       {
         clock != 0 &&
