@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import "./../assests/css/Menu.css";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -39,61 +40,34 @@ export default class Menu extends Component {
                 onKeyDown={() => this.toggleDrawer(false)}
                 >
                 <List>
-                    <ListItem disablePadding>
+                    <ListItem sx={{ color: 'rgba(0, 0, 0, 0.54)' }} component={NavLink} to="/" disablePadding>
                         <ListItemButton>
                             <ListItemIcon>
                                 <HomeIcon/>
                             </ListItemIcon>                            
-                            <NavLink to={"/"}><ListItemText primary={"Home"}/></NavLink>
+                            <ListItemText primary={"Home"}/>
                         </ListItemButton>
                     </ListItem>
                 </List>
                 <Divider />
                 <List>
-                    <ListItem disablePadding>
+                    <ListItem sx={{ color: 'rgba(0, 0, 0, 0.54)' }} component={NavLink} to="/salas" disablePadding>
                         <ListItemButton>
                             <ListItemIcon>
                                 <MeetingRoomIcon/>
                             </ListItemIcon>           
-                            <ListItemText>
-                                <NavLink to={"/salas"}>Sala</NavLink>
-                            </ListItemText>                           
+                            <ListItemText primary={"Salas"}/>                         
                         </ListItemButton>                       
                     </ListItem>
-                    <ListItem disablePadding>
+                    <ListItem sx={{ color: 'rgba(0, 0, 0, 0.54)' }} component={NavLink} to="/empresas" disablePadding>
                         <ListItemButton>
                             <ListItemIcon>
                                 <WorkIcon/>
                             </ListItemIcon>                            
-                            <NavLink to={"/empresas"}><ListItemText primary={"Empresas"}/></NavLink>
+                            <ListItemText primary={"Empresas"}/>
                         </ListItemButton>
                     </ListItem>
                 </List>
-                {/* <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                        <ListItemIcon>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                    ))}
-                </List> */}
-                {/* <Divider />
-                <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                        <ListItemIcon>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                    ))}
-                </List> */}
             </Box>
         </div>
         
@@ -115,15 +89,15 @@ export default class Menu extends Component {
                     >
                         <MenuIcon />
                     </IconButton>
+
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Timer
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    <Button component={NavLink} to="/login" color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
         </Box>
         <React.Fragment key={"left"}>
-          {/* <Button onClick={() => this.toggleDrawer(true)}>{"left"}</Button> */}
           <Drawer
             anchor={"left"}
             open={this.state.open}
