@@ -98,8 +98,7 @@ export default class Home extends Component {
 
   render() {
     return (
-      <div className='container-home'>
-               
+      <div className='container-home'>               
         {
         this.state.clock != 0 &&
             <div className="clock">
@@ -131,18 +130,20 @@ export default class Home extends Component {
                 </div>
             </div>
         }
-
-        <form>
+        <br/>
+        <form style={{display: 'flex', flexDirection: 'column' , justifyContent: 'center', alignItems: 'center'}}>
             <input id='texto' type="text" ref={this.numero}/>
-            <Button onClick={e => this.comenzar(e)} id='btnEnviar' variant="contained" color="success">
-                Comenzar
-            </Button>
-            <Button onClick={e => this.pausar(e)} variant="contained" color="error">
-                Pausar
-            </Button>
-            <Button onClick={e => this.reanudar(e)} variant="contained" color="primary">
-                Reanudar
-            </Button>
+            <div>
+              <Button onClick={e => this.comenzar(e)} variant="contained" color="success" style={{margin: '10px'}}>
+                  Comenzar
+              </Button>
+              <Button onClick={e => this.pausar(e)} variant="contained" color="error" style={{margin: '10px'}}>
+                  Pausar
+              </Button>
+              <Button onClick={e => this.reanudar(e)} variant="contained" color="primary" style={{margin: '10px'}}>
+                  Reanudar
+              </Button>
+            </div>
         </form>
 
       </div>

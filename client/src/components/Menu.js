@@ -17,6 +17,9 @@ import ListItemText from '@mui/material/ListItemText';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CategoryIcon from '@mui/icons-material/Category';
 import { NavLink } from 'react-router-dom';
 
 
@@ -65,6 +68,30 @@ export default class Menu extends Component {
                                 <WorkIcon/>
                             </ListItemIcon>                            
                             <ListItemText primary={"Empresas"}/>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem sx={{ color: 'rgba(0, 0, 0, 0.54)' }} component={NavLink} to="/categorias" disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <CategoryIcon/>
+                            </ListItemIcon>                            
+                            <ListItemText primary={"Categorias"}/>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem sx={{ color: 'rgba(0, 0, 0, 0.54)' }} component={NavLink} to="/temporizadores" disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <AccessAlarmIcon/>
+                            </ListItemIcon>                            
+                            <ListItemText primary={"Temporizadores"}/>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem sx={{ color: 'rgba(0, 0, 0, 0.54)' }} component={NavLink} to="/eventos" disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <CalendarMonthIcon/>
+                            </ListItemIcon>                            
+                            <ListItemText primary={"Eventos"}/>
                         </ListItemButton>
                     </ListItem>
                 </List>
