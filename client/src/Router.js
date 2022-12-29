@@ -5,6 +5,9 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Menu from './components/Menu';
 import Salas from './components/Salas';
+import Categorias from './components/Categorias';
+import Temporizador from './components/Temporizadores';
+import Evento from './components/Eventos';
 
 export default class Router extends Component {
     render() {
@@ -15,6 +18,9 @@ export default class Router extends Component {
                     <Route path='/' element={<Home/>}/>
                     <Route path='/salas' element={<Salas/>}/>
                     <Route path='/empresas' element={<Empresas/>}/>
+                    <Route path='/categorias' element={<Categorias/>}/>
+                    <Route path='/temporizadores' element={<Temporizador/>}/>
+                    <Route path='/eventos' element={<Evento/>}/>
                     <Route path='/login' element={<Login/>}/>
                 </Routes>
             </BrowserRouter>
