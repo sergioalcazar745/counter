@@ -1,0 +1,9 @@
+.link-disable{
+    text-decoration: none;
+    color: white;
+}
+
+.link-disable-dark{
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.54);
+}
