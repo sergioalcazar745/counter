@@ -13,8 +13,4 @@ export default class EmpresaService{
         });
     }
 
-    getSalas(){
-        
-    }
-
 }
