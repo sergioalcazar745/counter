@@ -106,7 +106,9 @@ export default class Menu extends Component {
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton
+               { localStorage.getItem("token") &&
+          (
+            <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
@@ -116,7 +118,8 @@ export default class Menu extends Component {
                     >
                         <MenuIcon />
                     </IconButton>
-
+          )
+          }
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Timer
                     </Typography>
