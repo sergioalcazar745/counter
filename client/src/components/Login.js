@@ -4,7 +4,6 @@ import { TextField, Button } from '@mui/material';
 import { Container } from '@mui/system';
 import Grid from '@mui/material/Grid';
 import LoginService from '../services/LoginService'
-import Global from "./../Global";
 import { Navigate } from 'react-router-dom';
 
 const service = new LoginService()
