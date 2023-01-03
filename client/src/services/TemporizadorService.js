@@ -23,11 +23,11 @@ export default class TemporizadorService{
         });
     }
 
-    putTemporizador(temporizador){
+    updateTemporizador(temporizador){
         return new Promise(function(resolve) {
             var request = Global.url + "api/timers";
 
-            axios.post(request, temporizador).then(response => {
+            axios.put(request, temporizador).then(response => {
                 resolve(response.data)
             });
         });

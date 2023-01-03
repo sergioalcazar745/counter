@@ -1,35 +1,44 @@
 import React, { Component } from 'react';
 import TemporizadorService from './../services/TemporizadorService';
+import CategoriaService from './../services/CategoriaService';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import AddIcon from '@mui/icons-material/Add';
-import { Alert, Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Fab, ListItemAvatar, TextField, Zoom } from '@mui/material';
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Fab, FormControl, InputLabel, ListItemAvatar, MenuItem, Select, TextField, Typography, Zoom } from '@mui/material';
 
 const service = new TemporizadorService()
+const serviceCategoria = new CategoriaService()
 
 export default class Temporizadores extends Component {
     state = {
         temporizadores: null,
+        categorias: null,
         status: false,
+        statusCategoria: false,
         openDialog: false,
         openDialogUpdate: false,
         openAlertSuccess: false,
         openAlertError: false,
+        accordion: true,
         id: 0,
         nombre: "",
         message: "",
     }
 
-    nombre = React.createRef();
+    inicio = React.createRef();
+    categoria = React.createRef();
 
     componentDidMount = () => {
-        this.getAllEmpresas();
+        this.getAllTemporizadores();
+        this.getAllCategorias();
     }
 
-    getAllEmpresas = () => {
+    getAllTemporizadores = () => {
         service.getAllTemporizadores().then(result => {
             this.state.temporizadores = result;
             this.state.status = true
@@ -40,31 +49,43 @@ export default class Temporizadores extends Component {
         });
     }
 
-    deleteEmpresa = (id) => {
-        service.deleteEmpresa(id).then(() => {
+    deleteTemporizador = (id) => {
+        service.deleteTemporizador(id).then(() => {
             this.state.status = false;
             this.setState({
                 status: this.state.status,
                 openDialogUpdate: false
             })
-            this.getAllEmpresas();
+            this.getAllTemporizadores();
             this.handleClickOpenAlertSuccess("Se ha eliminado correctamente")
         })
     }
 
-    addEmpresa = () => {
-        service.postEmpresa(this.nombre.current.value).then(result => {
-            this.getAllEmpresas();
+    addTemporizador = () => {
+        service.postTemporizador({inicio: this.inicio.current.value, idCategoria: this.categoria.current.value, pausa: false}).then(result => {
+            this.getAllTemporizadores();
             this.handleClickCloseDialog();
             this.handleClickOpenAlertSuccess("Se ha añadido correctamente")
         })
     }
 
-    updateEmpresa = () => {
-        service.updateEmpresa(this.state.id, this.nombre.current.value).then(result => {
-            this.getAllEmpresas();
+    updateTemporizador = () => {
+        service.updateTemporizador({idTemporizador: this.state.id, inicio: this.inicio.current.value, idCategoria: this.categoria.current.value, pausa: false}).then(result => {
+            this.getAllTemporizadores();
             this.handleClickCloseDialogUpdate();
             this.handleClickOpenAlertSuccess("Se ha actualizado correctamente")
+        });
+    }
+
+    // -- Categorias --
+
+    getAllCategorias = () => {
+        serviceCategoria.getAllCategorias().then(result => {
+            this.state.categorias = result
+            this.setState({
+                categorias: this.state.categorias,
+                statusCategoria: true
+            })
         });
     }
 
@@ -84,11 +105,12 @@ export default class Temporizadores extends Component {
 
     // -- Dialogo Update --
 
-    handleClickOpenDialogUpdate = (id, nombre) => {
+    handleClickOpenDialogUpdate = (id, inicio, categoria) => {
         this.setState({
             openDialogUpdate: true,
             id: id,
-            nombre: nombre
+            inicio: inicio,
+            categoria: categoria
         })
     }
 
@@ -130,19 +152,29 @@ export default class Temporizadores extends Component {
 
     // -------------------------------------------------------------------------------------
 
-    listEmpresas = () => {
+    changeFormat = (time) => {
+        let fecha = time.substring(0, time.indexOf("T"))
+        let hora = time.substring(time.indexOf("T") + 1, time.length)
+        let fechaHora = fecha + " - " + hora
+        let final = fechaHora.substring(0, fechaHora.length - 3)
+        return final
+    }
+
+    // -------------------------------------------------------------------------------------
+
+    listTemporizadores = () => {
         return (
             <div>
                 <List>
                     {
                         this.state.temporizadores.map((temporizador, index) => {
                             return (
-                                <ListItem component="div" disablePadding key={index} onClick={() => this.handleClickOpenDialogUpdate(temporizador.idEmpresa, temporizador.nombreEmpresa)}>
+                                <ListItem component="div" disablePadding key={index} onClick={() => this.handleClickOpenDialogUpdate(temporizador.idTemporizador, temporizador.inicio,temporizador.idCategoria)}>
                                     <ListItemButton>
                                         <ListItemAvatar>
-                                            <Avatar alt="Remy Sharp" src={temporizador.imagen} />
+                                            <AccessAlarmIcon/>
                                         </ListItemAvatar>
-                                        <ListItemText primary={temporizador.inicio} />
+                                        <ListItemText primary={this.changeFormat(temporizador.inicio)} />
                                     </ListItemButton>
                                 </ListItem>
                             )
@@ -177,7 +209,7 @@ export default class Temporizadores extends Component {
                     }
                     {
                         this.state.status == true &&
-                        this.listEmpresas()
+                        this.listTemporizadores()
                     }
                     <Zoom
                     in = {true}
@@ -193,22 +225,38 @@ export default class Temporizadores extends Component {
                 </Box>
                 {/* Dialog para añadir */}
                 <Dialog open={this.state.openDialog} onClose={() => this.handleClickCloseDialog()}>
-                    <DialogTitle>Añadir una empresa</DialogTitle>
+                    <DialogTitle>Añadir un temporizador</DialogTitle>
                     <DialogContent>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Nombre de la empresa"
-                            type="text"
+                            label=""
+                            type="datetime-local"
                             fullWidth
                             variant="standard"
-                            inputRef={this.nombre}
+                            inputRef={this.inicio}
                         />
+                        <FormControl sx={{ mt: 3, width: '100%' }}>
+                            <InputLabel id="demo-simple-select-helper-label">Categoria</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-helper-label"
+                                id="demo-simple-select-helper"
+                                label="Categoria"
+                                inputRef={this.categoria}
+                            >
+                                {
+                                    this.state.statusCategoria &&
+                                    this.state.categorias.map((categoria, index) => {
+                                        return (<MenuItem key={index} value={categoria.idCategoria}>{categoria.categoria}</MenuItem>)
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => this.handleClickCloseDialog()}>Cancelar</Button>
-                        <Button onClick={() => this.addEmpresa()}>Añadir</Button>
+                        <Button onClick={() => this.addTemporizador()}>Añadir</Button>
                     </DialogActions>
                 </Dialog>
                 {/* Dialog para actualizar */}
@@ -223,13 +271,30 @@ export default class Temporizadores extends Component {
                             type="text"
                             fullWidth
                             variant="standard"
-                            inputRef={this.nombre}
-                            defaultValue={this.state.nombre}
+                            inputRef={this.inicio}
+                            defaultValue={this.state.inicio}
                         />
+                        <FormControl sx={{ mt: 3, width: '100%' }}>
+                            <InputLabel id="demo-simple-select-helper-label">Categoria</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-helper-label"
+                                id="demo-simple-select-helper"
+                                label="Categoria"
+                                defaultValue={this.state.categoria}
+                                inputRef={this.categoria}
+                            >
+                                {
+                                    this.state.statusCategoria &&
+                                    this.state.categorias.map((categoria, index) => {
+                                        return (<MenuItem key={index} value={categoria.idCategoria}>{categoria.categoria}</MenuItem>)
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
                     </DialogContent>
                     <DialogActions sx={{justifyContent:'space-around'}}>
-                        <Button onClick={() => this.deleteEmpresa(this.state.id)}>Eliminar</Button>
-                        <Button onClick={() => this.updateEmpresa()}>Actualizar</Button>
+                        <Button onClick={() => this.deleteTemporizador(this.state.id)}>Eliminar</Button>
+                        <Button onClick={() => this.updateTemporizador()}>Actualizar</Button>
                     </DialogActions>
                 </Dialog>
             </div>

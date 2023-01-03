@@ -103,42 +103,41 @@ export default class Home extends Component {
         }
     }
 
-
-  render() {
-    return (
-      <div className='container-home'>               
-        {
-        this.state.clock != 0 &&
-            <div className="clock">
-                <div className="hours">
-                    <div className="first">
-                    <div className="number">{this.state.clock.hours[0]}</div>
-                    </div>
-                    <div className="second">
-                    <div className="number">{this.state.clock.hours[1]}</div>
-                    </div>
-                </div>
-            <div className="tick">:</div>
-                <div className="minutes">
-                    <div className="first">
-                    <div className="number">{this.state.clock.minutes[0]}</div>
-                    </div>
-                    <div className="second">
-                    <div className="number">{this.state.clock.minutes[1]}</div>
-                    </div>
-                </div>
-            <div className="tick">:</div>
-                <div className="seconds">
-                    <div className="first">
-                    <div className="number">{this.state.clock.seconds[0]}</div>
-                    </div>
-                    <div className="second infinite">
-                    <div className="number">{this.state.clock.seconds[1]}</div>
-                    </div>
-                </div>
-            </div>
-        }
-        <br/>
+    render() {
+      return (
+        <div className='container-home'>               
+          {
+          this.state.clock != 0 &&
+              <div className="clock">
+                  <div className="hours">
+                      <div className="first">
+                      <div className="number">{this.state.clock.hours[0]}</div>
+                      </div>
+                      <div className="second">
+                      <div className="number">{this.state.clock.hours[1]}</div>
+                      </div>
+                  </div>
+              <div className="tick">:</div>
+                  <div className="minutes">
+                      <div className="first">
+                      <div className="number">{this.state.clock.minutes[0]}</div>
+                      </div>
+                      <div className="second">
+                      <div className="number">{this.state.clock.minutes[1]}</div>
+                      </div>
+                  </div>
+              <div className="tick">:</div>
+                  <div className="seconds">
+                      <div className="first">
+                      <div className="number">{this.state.clock.seconds[0]}</div>
+                      </div>
+                      <div className="second infinite">
+                      <div className="number">{this.state.clock.seconds[1]}</div>
+                      </div>
+                  </div>
+              </div>
+          }
+          <br/>
         {
           localStorage.getItem("token") &&
           (
