@@ -18,7 +18,6 @@ export default class Router extends Component {
 
         function GetOut() {
             const { deslog } = useOutletContext()
-            console.log(deslog)
             return <Home log={deslog} />
         }
         return (
