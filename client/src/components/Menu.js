@@ -21,7 +21,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import CategoryIcon from '@mui/icons-material/Category';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Navigate, NavLink, Outlet } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
@@ -32,6 +32,8 @@ export default class Menu extends Component {
         refresh: false,
         anchorEl: null,
         setAnchorEl: null,
+        home: false,
+        deslog:false
     }
 
     toggleDrawer = (value) => {
@@ -128,6 +130,9 @@ export default class Menu extends Component {
 
 
     render() {
+        if (this.state.home == true) {
+            return <Navigate to="/login" />
+        }
         return (
             <div>
                 <Box sx={{ flexGrow: 1 }}>
@@ -151,46 +156,49 @@ export default class Menu extends Component {
                             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                                 Timer
                             </Typography>
-                            
-                                {
-                                    localStorage.getItem("token") ?
-                                (
-                                <div>
-                                <IconButton
-                                    size="large"
-                                    aria-label="account of current user"
-                                    aria-controls="menu-appbar"
-                                    aria-haspopup="true"
-                                    onClick={this.handleMenu}
-                                    color="inherit"
-                                >
-                                    <AccountCircle />
-                                </IconButton>
-                                <Menu0
-                                    id="menu-appbar"
-                                    anchorEl={this.state.setAnchorEl}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(this.state.setAnchorEl)}
-                                    onClose={this.handleClose}
-                                >
-                                    <MenuItem onClick={()=>{
-                                        localStorage.removeItem("token");
-                                        this.metodo("b")
-                                    }}>Cerrar Sesión</MenuItem>
-                                </Menu0>
-                            </div>
-                            ):(
-                                <Button component={NavLink} to="/login" color="inherit">Login</Button>
-                            )
-                        }          
+
+                            {
+                                localStorage.getItem("token") ?
+                                    (
+                                        <div>
+                                            <IconButton
+                                                size="large"
+                                                aria-controls="menu-appbar"
+                                                aria-haspopup="true"
+                                                onClick={this.handleMenu}
+                                                color="inherit"
+                                            >
+                                                <AccountCircle />
+                                            </IconButton>
+                                            <Menu0
+                                                id="menu-appbar"
+                                                anchorEl={this.state.setAnchorEl}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                keepMounted
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                open={Boolean(this.state.setAnchorEl)}
+                                                onClose={this.handleClose}
+                                            >
+                                                <MenuItem onClick={()=>{
+                                                   this.handleClose()
+                                                   localStorage.removeItem("token");
+                                                   this.metodo("b")
+                                                   this.setState({
+                                                    deslog:true
+                                                })
+                                                }}>Cerrar sesión</MenuItem>
+                                            </Menu0>
+                                        </div>
+                                    ) : (
+                                        <Button component={NavLink} to="/login" color="inherit">Login</Button>
+                                    )
+                            }
                         </Toolbar>
                     </AppBar>
                 </Box>
@@ -203,7 +211,7 @@ export default class Menu extends Component {
                         {this.list("left")}
                     </Drawer>
                 </React.Fragment>
-                <Outlet context={{ "para": this.metodo }} />
+                <Outlet context={{ "para": this.metodo}} />
             </div>
         )
     }
