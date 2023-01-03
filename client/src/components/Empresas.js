@@ -15,6 +15,7 @@ export default class Empresas extends Component {
 
     state = {
         empresas: null,
+        //no se deberia de poner un status diferente para cada funcion???
         status: false,
         openDialog: false,
         openDialogUpdate: false,

@@ -8,7 +8,7 @@ function valuetext(value) {
     return `${value}°C`;
 }
 
-const service = new CategoriaService()
+const service = new CategoriaService();
 
 export default class Categorias extends Component {
 
