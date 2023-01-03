@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Routes, Route, useParams, useOutlet, useOutletContext } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useOutletContext } from 'react-router-dom';
 import Empresas from './components/Empresas';
 import Home from './components/Home';
 import Login from './components/Login';
@@ -15,11 +15,17 @@ export default class Router extends Component {
             const { para } = useOutletContext()
             return <Login metodo={para} />
         }
+
+        function GetOut() {
+            const { deslog } = useOutletContext()
+            console.log(deslog)
+            return <Home log={deslog} />
+        }
         return (
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<Menu />}>
-                        <Route path='' element={<Home />} />
+                        <Route path='' element={<GetOut />} />
                         <Route path='salas' element={<Salas />} />
                         <Route path='empresas' element={<Empresas />} />
                         <Route path='categorias' element={<Categorias />} />
