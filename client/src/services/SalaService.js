@@ -13,11 +13,32 @@ export default class EmpresaService{
         });
     }
 
-    deleteSala(id){
+    deletesala(id){
         return new Promise(function(resolve){
             var request = Global.url + "api/Salas/" + id;
 
             axios.delete(request).then(() => {
+                resolve();
+            });
+        });
+    }
+
+    postsala(nombre){
+        return new Promise(function(resolve){
+            var request = Global.url + "api/salas/createsala/" + nombre;
+
+            axios.post(request).then(() => {
+                resolve();
+            });
+        });
+    }
+
+    updatesala(id, nombre){
+        return new Promise(function(resolve){
+            var request = Global.url + "api/salas/updatesala/" + id + "/" + nombre;
+            console.log(request)
+
+            axios.put(request).then(() => {
                 resolve();
             });
         });
