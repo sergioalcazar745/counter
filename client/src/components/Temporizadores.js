@@ -19,6 +19,7 @@ export default class Temporizadores extends Component {
         temporizadores: null,
         categorias: null,
         status: false,
+        statusCategoria: false,
         openDialog: false,
         openDialogUpdate: false,
         openAlertSuccess: false,
@@ -29,10 +30,12 @@ export default class Temporizadores extends Component {
         message: "",
     }
 
-    nombre = React.createRef();
+    inicio = React.createRef();
+    categoria = React.createRef();
 
     componentDidMount = () => {
         this.getAllTemporizadores();
+        this.getAllCategorias();
     }
 
     getAllTemporizadores = () => {
@@ -59,7 +62,7 @@ export default class Temporizadores extends Component {
     }
 
     addTemporizador = () => {
-        service.postTemporizador(this.nombre.current.value).then(result => {
+        service.postTemporizador(this.inicio.current.value).then(result => {
             this.getAllTemporizadores();
             this.handleClickCloseDialog();
             this.handleClickOpenAlertSuccess("Se ha añadido correctamente")
@@ -67,7 +70,7 @@ export default class Temporizadores extends Component {
     }
 
     updateTemporizador = () => {
-        service.updateEmpresa(this.state.id, this.nombre.current.value).then(result => {
+        service.updateEmpresa(this.state.id, this.inicio.current.value).then(result => {
             this.getAllTemporizadores();
             this.handleClickCloseDialogUpdate();
             this.handleClickOpenAlertSuccess("Se ha actualizado correctamente")
@@ -77,11 +80,11 @@ export default class Temporizadores extends Component {
     // -- Categorias --
 
     getAllCategorias = () => {
-        service.getAllCategorias().then(result => {
+        serviceCategoria.getAllCategorias().then(result => {
             this.state.categorias = result
             this.setState({
                 categorias: this.state.categorias,
-                status: true
+                statusCategoria: true
             })
         });
     }
@@ -227,27 +230,26 @@ export default class Temporizadores extends Component {
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Inicio"
-                            type="datetime"
+                            label=""
+                            type="datetime-local"
                             fullWidth
                             variant="standard"
-                            inputRef={this.nombre}
+                            inputRef={this.inicio}
                         />
                         <FormControl sx={{ mt: 3, width: '100%' }}>
                             <InputLabel id="demo-simple-select-helper-label">Categoria</InputLabel>
                             <Select
                                 labelId="demo-simple-select-helper-label"
                                 id="demo-simple-select-helper"
-                                defaultValue={5}
                                 label="Categoria"
-                                inputRef={this.duracion}
+                                inputRef={this.categoria}
                             >
-                                <MenuItem value={"prueba"}>{"prueba"}</MenuItem>
-                                {/* {
-                                    this.state.tiempos.map((tiempo, index) => {
-                                        return (<MenuItem key={tiempo} value={tiempo}>{tiempo}</MenuItem>)
+                                {
+                                    this.state.statusCategoria &&
+                                    this.state.categorias.map((categoria, index) => {
+                                        return (<MenuItem key={categoria.categoria} value={categoria.categoria}>{categoria.categoria}</MenuItem>)
                                     })
-                                } */}
+                                }
                             </Select>
                         </FormControl>
                     </DialogContent>
