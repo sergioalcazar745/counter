@@ -7,15 +7,16 @@
 .container-home {
   height: calc(100vh - 64px);
   width: 100%;
-  background: black;
+  /* background: black; */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 .clock {
   height: 20vh;
-  color: white;
+  color: black;
   font-size: 22vh;
   font-family: sans-serif;
   line-height: 20.4vh;
@@ -24,18 +25,42 @@
   overflow: hidden;
 }
 
+@media (max-width: 778px) {
+  .clock{
+    height: 15vh;
+    font-size: 16vh;
+    line-height: 15.2vh;
+  }
+}
+
+@media (max-width: 600px) {
+  .clock{
+    height: 10vh;
+    font-size: 11vh;
+    line-height: 10.2vh;
+  }
+}
+
+@media (max-width: 406px) {
+  .clock{
+    height: 7vh;
+    font-size: 8vh;
+    line-height: 8.2vh;
+  }
+}
+
 .clock::before, .clock::after {
   content: '';
   width: 7ch;
   height: 3vh;
-  background: linear-gradient(to top, transparent, black);
+  background: linear-gradient(to top, transparent, white);
   position: absolute;
   z-index: 2;
 }
 
 .clock::after {
   bottom: 0;
-  background: linear-gradient(to bottom, transparent, black);
+  background: linear-gradient(to bottom, transparent, white);
 }
 
 .clock > div {
