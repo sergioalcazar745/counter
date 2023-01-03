@@ -88,6 +88,8 @@ export default class Home extends Component {
     }
 
     componentDidMount = () =>{
+        //Quitar
+        localStorage.setItem("comienzo", "comienzo")
         $("#btnPausar").hide();
         $("#btnReanudar").hide();
         const receiveMessage = (segundos) => {
