@@ -32,7 +32,6 @@ export default class Menu extends Component {
         refresh: false,
         anchorEl: null,
         setAnchorEl: null,
-        home: false,
         deslog:false
     }
 
@@ -108,7 +107,18 @@ export default class Menu extends Component {
 
     );
 
+    cerrazSesion = () => {        
+        // this.handleClose()
+        localStorage.removeItem("token");
+        // this.metodo("b")
+        this.setState({
+            setAnchorEl: null,
+            deslog:true
+        })
+    }
+
     metodo = (hola) => {
+        console.log("Refresh")
         this.setState({
             refresh: !this.state.refresh
         })
@@ -128,10 +138,10 @@ export default class Menu extends Component {
         })
     };
 
-
     render() {
-        if (this.state.home == true) {
-            return <Navigate to="/login" />
+        if(this.state.deslog){
+            window.location.href="/login"
+            // return <Navigate to={"/prueba"}/>
         }
         return (
             <div>
@@ -185,14 +195,7 @@ export default class Menu extends Component {
                                                 open={Boolean(this.state.setAnchorEl)}
                                                 onClose={this.handleClose}
                                             >
-                                                <MenuItem onClick={()=>{
-                                                   this.handleClose()
-                                                   localStorage.removeItem("token");
-                                                   this.metodo("b")
-                                                   this.setState({
-                                                    deslog:true
-                                                })
-                                                }}>Cerrar sesión</MenuItem>
+                                                <MenuItem onClick={()=> this.cerrazSesion()}>Cerrar sesión</MenuItem>
                                             </Menu0>
                                         </div>
                                     ) : (

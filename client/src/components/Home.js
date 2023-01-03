@@ -10,25 +10,32 @@ export default class Home extends Component {
 
     state = {
         clock: 0,
-        segundos: 0
+        segundos: 0,
+        pausar:false
     }
 
     numero = React.createRef();
 
     comenzar = (e) => {
-        e.preventDefault();
-        console.log("Hola")
-        socket.emit('contador', this.numero.current.value);
-        $("#btnEnviar").hide();
-        $("#btnPausar").show();
-        $("#texto").val("");
+      e.preventDefault();
+      console.log("Hola")
+      socket.emit('contador', this.numero.current.value);
+      $("#btnEnviar").hide();
+      $("#btnPausar").show();
+      $("#texto").val("");
+      this.setState({
+        pausar:false
+      })
     }
     
     pausar = (e) => {
-        e.preventDefault();
-        socket.emit('contador', "pausa");
-        $("#btnPausar").hide();
-        $("#btnReanudar").show();
+      e.preventDefault();
+      socket.emit('contador', "pausa");
+      $("#btnPausar").hide();
+      $("#btnReanudar").show();
+      this.setState({
+        pausar:true
+      })
     }
     
     reanudar = (e) => {
@@ -96,61 +103,89 @@ export default class Home extends Component {
         }
     }
 
-
-  render() {
-    return (
-      <div className='container-home'>               
-        {
-        this.state.clock != 0 &&
-            <div className="clock">
-                <div className="hours">
-                    <div className="first">
-                    <div className="number">{this.state.clock.hours[0]}</div>
+    render() {
+      return (
+        <div className='container-home'>               
+          {
+          this.state.clock != 0 &&
+              <div className="clock">
+                  <div className="hours">
+                      <div className="first">
+                      <div className="number">{this.state.clock.hours[0]}</div>
+                      </div>
+                      <div className="second">
+                      <div className="number">{this.state.clock.hours[1]}</div>
+                      </div>
+                  </div>
+              <div className="tick">:</div>
+                  <div className="minutes">
+                      <div className="first">
+                      <div className="number">{this.state.clock.minutes[0]}</div>
+                      </div>
+                      <div className="second">
+                      <div className="number">{this.state.clock.minutes[1]}</div>
+                      </div>
+                  </div>
+              <div className="tick">:</div>
+                  <div className="seconds">
+                      <div className="first">
+                      <div className="number">{this.state.clock.seconds[0]}</div>
+                      </div>
+                      <div className="second infinite">
+                      <div className="number">{this.state.clock.seconds[1]}</div>
+                      </div>
+                  </div>
+              </div>
+          }
+          <br/>
+          {
+            localStorage.getItem("token") &&
+            (
+              <form style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+              <input id='texto' type="text" ref={this.numero} />
+              <div>
+                {localStorage.getItem("comienzo") ?
+                  (<Button onClick={(e) => {
+                    this.comenzar(e);
+                    localStorage.removeItem("comienzo");
+                    localStorage.setItem("pausar","pausar")
+                  }} variant="contained" color="success" style={{ margin: '10px' }}>
+                    Comenzar
+                  </Button>) :
+                  (
+                    <div>
+                    {localStorage.getItem("reanudar") &&
+                        (
+                          <Button onClick={(e) => {
+                            this.reanudar(e)
+                            localStorage.removeItem("reanudar");
+                            localStorage.setItem("pausar","pausar")
+                          }} variant="contained" color="primary" style={{ margin: '10px' }}>
+                            Reanudar
+                          </Button>
+                        ) 
+                    }
+                    {
+                      localStorage.getItem("pausar") &&
+                       (
+                        <Button onClick={(e) => {
+                          this.pausar(e)
+                          localStorage.removeItem("pausar");
+                          localStorage.setItem("reanudar","reanudar")
+                        }}
+                          variant="contained" color="error" style={{ margin: '10px' }}>
+                          Pausar
+                        </Button>)
+                    }
                     </div>
-                    <div className="second">
-                    <div className="number">{this.state.clock.hours[1]}</div>
-                    </div>
-                </div>
-            <div className="tick">:</div>
-                <div className="minutes">
-                    <div className="first">
-                    <div className="number">{this.state.clock.minutes[0]}</div>
-                    </div>
-                    <div className="second">
-                    <div className="number">{this.state.clock.minutes[1]}</div>
-                    </div>
-                </div>
-            <div className="tick">:</div>
-                <div className="seconds">
-                    <div className="first">
-                    <div className="number">{this.state.clock.seconds[0]}</div>
-                    </div>
-                    <div className="second infinite">
-                    <div className="number">{this.state.clock.seconds[1]}</div>
-                    </div>
-                </div>
-            </div>
-        }
-        <br/>
-        {
-          localStorage.getItem("token") &&
-          (
-        <form style={{display: 'flex', flexDirection: 'column' , justifyContent: 'center', alignItems: 'center'}}>
-            <input id='texto' type="text" ref={this.numero}/>
-            <div>
-              <Button onClick={e => this.comenzar(e)} variant="contained" color="success" style={{margin: '10px'}}>
-                  Comenzar
-              </Button>
-              <Button onClick={e => this.pausar(e)} variant="contained" color="error" style={{margin: '10px'}}>
-                  Pausar
-              </Button>
-              <Button onClick={e => this.reanudar(e)} variant="contained" color="primary" style={{margin: '10px'}}>
-                  Reanudar
-              </Button>
-            </div>
-        </form>
-          )}
-      </div>
-    )
-  }
+                  )
+                }
+  
+  
+              </div>
+            </form>
+            )}
+        </div>
+      )
+    }
 }

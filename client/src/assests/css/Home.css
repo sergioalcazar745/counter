@@ -53,14 +53,14 @@
   content: '';
   width: 7ch;
   height: 3vh;
-  background: linear-gradient(to top, transparent, white);
+  /* background: linear-gradient(to top, transparent, white); */
   position: absolute;
   z-index: 2;
 }
 
 .clock::after {
   bottom: 0;
-  background: linear-gradient(to bottom, transparent, white);
+  /* background: linear-gradient(to bottom, transparent, white); */
 }
 
 .clock > div {
