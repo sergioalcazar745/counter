@@ -9,13 +9,19 @@ import { Navigate } from 'react-router-dom';
 const service = new LoginService()
 
 export default class Login extends Component {
+
     cajausuario = React.createRef();
     cajapass = React.createRef();
 
     state = {
         mensajeError: null,
         status: false,
-        redirigir:false
+        redirigir:false,
+        volver: false
+    }
+
+    home = () => {
+        this.setState({volver: true})
     }
 
     datosLogin = () => {
@@ -41,7 +47,7 @@ export default class Login extends Component {
                     this.setState({
                         redirigir:true
                     })
-
+                    localStorage.setItem("comienzo", "comienzo")
                 })
                     .catch(error => {
                         var mensajeError = "No se ha encontrado el usuario"
@@ -58,9 +64,13 @@ export default class Login extends Component {
     }
 
     render() {
+
         if(this.state.redirigir==true){
             return (<Navigate to="/"/>);
-        }
+        }else if(this.state.volver==true){
+            return (<Navigate to="/"/>);
+        }        
+
         return (
             <Grid
                 container
@@ -95,6 +105,9 @@ export default class Login extends Component {
                         <Container>
                             <Button variant="contained" color='success' onClick={this.datosLogin}>
                                 Enviar datos
+                            </Button>
+                            <Button variant="contained" color='primary' onClick={this.datosLogin}>
+                                Timer
                             </Button>
                         </Container>
                         <br />
