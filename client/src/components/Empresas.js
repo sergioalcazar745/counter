@@ -5,10 +5,8 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import EditIcon from '@mui/icons-material/Edit';
-import { Alert, Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, ListItemAvatar, ListItemIcon, TextField} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { Alert, Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Fab, ListItemAvatar, TextField, Zoom } from '@mui/material';
 
 const service = new EmpresaService();
 export default class Empresas extends Component {
@@ -26,7 +24,6 @@ export default class Empresas extends Component {
     }
 
     nombre = React.createRef();
-    //imagen = React.createRef();
 
     componentDidMount = () => {
         this.getAllEmpresas();
@@ -47,7 +44,8 @@ export default class Empresas extends Component {
         service.deleteEmpresa(id).then(() => {
             this.state.status = false;
             this.setState({
-                status: this.state.status
+                status: this.state.status,
+                openDialogUpdate: false
             })
             this.getAllEmpresas();
             this.handleClickOpenAlertSuccess("Se ha eliminado correctamente")
@@ -135,29 +133,23 @@ export default class Empresas extends Component {
     listEmpresas = () => {
         return (
             <div>
-                <ListItem component="div" disablePadding onClick={() => this.handleClickOpenDialog()}>
+                {/* <ListItem component="div" disablePadding onClick={() => this.handleClickOpenDialog()}>
                     <ListItemButton>
                         <ListItemIcon>
-                            <AddBoxIcon fontSize='large'/>
+                            <AddBoxIcon fontSize='large' />
                         </ListItemIcon>
                     </ListItemButton>
-                </ListItem>
+                </ListItem> */}
                 <List>
                     {
                         this.state.empresas.map((empresa, index) => {
                             return (
-                                <ListItem component="div" disablePadding key={index}>
+                                <ListItem component="div" disablePadding key={index} onClick={() => this.handleClickOpenDialogUpdate(empresa.idEmpresa, empresa.nombreEmpresa)}>
                                     <ListItemButton>
                                         <ListItemAvatar>
                                             <Avatar alt="Remy Sharp" src={empresa.imagen} />
                                         </ListItemAvatar>
                                         <ListItemText primary={empresa.nombreEmpresa} />
-                                        <IconButton edge="end" aria-label="delete" color='info'>
-                                            <EditIcon onClick={() => this.handleClickOpenDialogUpdate(empresa.idEmpresa, empresa.nombreEmpresa)}/>
-                                        </IconButton>
-                                        <IconButton edge="end" aria-label="delete" color='error'>
-                                            <DeleteIcon onClick={() => this.deleteEmpresa(empresa.idEmpresa)}/>
-                                        </IconButton>
                                     </ListItemButton>
                                 </ListItem>
                             )
@@ -185,7 +177,7 @@ export default class Empresas extends Component {
                     this.state.openAlertError &&
                     <Alert onClose={() => this.handleClickCloseAlertError()}>{this.state.message}</Alert>
                 }
-                <Box sx={{ width: '100%', bgcolor: 'background.paper', marginTop: '8px' }}>
+                <Box sx={{ width: '100%', bgcolor: 'background.paper'}}>
                     {
                         this.state.status == false &&
                         this.spinner()
@@ -194,6 +186,17 @@ export default class Empresas extends Component {
                         this.state.status == true &&
                         this.listEmpresas()
                     }
+                    <Zoom
+                    in = {true}
+                    timeout = {{enter: 10, exit: 10}}
+                    unmountOnExit
+                    style={{position: 'fixed', top: 'calc(100vh - 75px)', right: '20px'}}
+                    onClick={() => this.handleClickOpenDialog()}
+                    >
+                        <Fab color={"primary"} size={"size"}>
+                            <AddIcon/>
+                        </Fab>
+                    </Zoom>
                 </Box>
                 {/* Dialog para añadir */}
                 <Dialog open={this.state.openDialog} onClose={() => this.handleClickCloseDialog()}>
@@ -217,7 +220,7 @@ export default class Empresas extends Component {
                 </Dialog>
                 {/* Dialog para actualizar */}
                 <Dialog open={this.state.openDialogUpdate} onClose={() => this.handleClickCloseDialogUpdate()}>
-                    <DialogTitle>Actualizar empresa</DialogTitle>
+                    <DialogTitle>Información</DialogTitle>
                     <DialogContent>
                         <TextField
                             autoFocus
@@ -231,8 +234,8 @@ export default class Empresas extends Component {
                             defaultValue={this.state.nombre}
                         />
                     </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => this.handleClickCloseDialogUpdate()}>Cancelar</Button>
+                    <DialogActions sx={{justifyContent:'space-around'}}>
+                        <Button onClick={() => this.deleteEmpresa(this.state.id)}>Eliminar</Button>
                         <Button onClick={() => this.updateEmpresa()}>Actualizar</Button>
                     </DialogActions>
                 </Dialog>
