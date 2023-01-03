@@ -79,6 +79,7 @@ export default class Login extends Component {
                 justifyContent="center"
                 style={{ minHeight: '70vh', maxwidth: '100vw' }}
             >
+                <h1 style={{margin: 'auto'}}>LOGIN</h1>
                 <Grid>
                     <Container>
                         <FormLabel>Usuario: </FormLabel>
@@ -106,7 +107,7 @@ export default class Login extends Component {
                             <Button variant="contained" color='success' onClick={this.datosLogin}>
                                 Enviar datos
                             </Button>
-                            <Button variant="contained" color='primary' onClick={this.datosLogin}>
+                            <Button sx={{marginLeft: '10px'}} variant="contained" color='primary' onClick={() => this.home()}>
                                 Timer
                             </Button>
                         </Container>
