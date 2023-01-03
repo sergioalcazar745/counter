@@ -96,6 +96,7 @@ export default class Home extends Component {
         }
     }
 
+
   render() {
     return (
       <div className='container-home'>               
@@ -131,6 +132,9 @@ export default class Home extends Component {
             </div>
         }
         <br/>
+        {
+          localStorage.getItem("token") &&
+          (
         <form style={{display: 'flex', flexDirection: 'column' , justifyContent: 'center', alignItems: 'center'}}>
             <input id='texto' type="text" ref={this.numero}/>
             <div>
@@ -145,7 +149,7 @@ export default class Home extends Component {
               </Button>
             </div>
         </form>
-
+          )}
       </div>
     )
   }
