@@ -15,7 +15,7 @@ export default class Login extends Component {
     state = {
         mensajeError: null,
         status: false,
-        redirigir:false
+        redirigir: false
     }
 
     datosLogin = () => {
@@ -39,9 +39,9 @@ export default class Login extends Component {
                     localStorage.setItem("token", result)
                     this.props.metodo("a")
                     this.setState({
-                        redirigir:true
+                        redirigir: true
                     })
-
+                    localStorage.setItem("comienzo", "comienzo")
                 })
                     .catch(error => {
                         var mensajeError = "No se ha encontrado el usuario"
@@ -58,8 +58,8 @@ export default class Login extends Component {
     }
 
     render() {
-        if(this.state.redirigir==true){
-            return (<Navigate to="/"/>);
+        if (this.state.redirigir == true) {
+            return (<Navigate to="/" />);
         }
         return (
             <Grid

@@ -10,25 +10,32 @@ export default class Home extends Component {
 
     state = {
         clock: 0,
-        segundos: 0
+        segundos: 0,
+        pausar:false
     }
 
     numero = React.createRef();
 
     comenzar = (e) => {
-        e.preventDefault();
-        console.log("Hola")
-        socket.emit('contador', this.numero.current.value);
-        $("#btnEnviar").hide();
-        $("#btnPausar").show();
-        $("#texto").val("");
+      e.preventDefault();
+      console.log("Hola")
+      socket.emit('contador', this.numero.current.value);
+      $("#btnEnviar").hide();
+      $("#btnPausar").show();
+      $("#texto").val("");
+      this.setState({
+        pausar:false
+      })
     }
     
     pausar = (e) => {
-        e.preventDefault();
-        socket.emit('contador', "pausa");
-        $("#btnPausar").hide();
-        $("#btnReanudar").show();
+      e.preventDefault();
+      socket.emit('contador', "pausa");
+      $("#btnPausar").hide();
+      $("#btnReanudar").show();
+      this.setState({
+        pausar:true
+      })
     }
     
     reanudar = (e) => {
@@ -135,20 +142,49 @@ export default class Home extends Component {
         {
           localStorage.getItem("token") &&
           (
-        <form style={{display: 'flex', flexDirection: 'column' , justifyContent: 'center', alignItems: 'center'}}>
-            <input id='texto' type="text" ref={this.numero}/>
+            <form style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+            <input id='texto' type="text" ref={this.numero} />
             <div>
-              <Button onClick={e => this.comenzar(e)} variant="contained" color="success" style={{margin: '10px'}}>
+              {localStorage.getItem("comienzo") ?
+                (<Button onClick={(e) => {
+                  this.comenzar(e);
+                  localStorage.removeItem("comienzo");
+                  localStorage.setItem("pausar","pausar")
+                }} variant="contained" color="success" style={{ margin: '10px' }}>
                   Comenzar
-              </Button>
-              <Button onClick={e => this.pausar(e)} variant="contained" color="error" style={{margin: '10px'}}>
-                  Pausar
-              </Button>
-              <Button onClick={e => this.reanudar(e)} variant="contained" color="primary" style={{margin: '10px'}}>
-                  Reanudar
-              </Button>
+                </Button>) :
+                (
+                  <div>
+                  {localStorage.getItem("reanudar") &&
+                      (
+                        <Button onClick={(e) => {
+                          this.reanudar(e)
+                          localStorage.removeItem("reanudar");
+                          localStorage.setItem("pausar","pausar")
+                        }} variant="contained" color="primary" style={{ margin: '10px' }}>
+                          Reanudar
+                        </Button>
+                      ) 
+                  }
+                  {
+                    localStorage.getItem("pausar") &&
+                     (
+                      <Button onClick={(e) => {
+                        this.pausar(e)
+                        localStorage.removeItem("pausar");
+                        localStorage.setItem("reanudar","reanudar")
+                      }}
+                        variant="contained" color="error" style={{ margin: '10px' }}>
+                        Pausar
+                      </Button>)
+                  }
+                  </div>
+                )
+              }
+
+
             </div>
-        </form>
+          </form>
           )}
       </div>
     )
