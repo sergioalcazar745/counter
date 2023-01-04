@@ -27,12 +27,13 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 
 
 export default class Menu extends Component {
+
     state = {
         open: false,
         refresh: false,
         anchorEl: null,
         setAnchorEl: null,
-        deslog:false
+        deslog: false
     }
 
     toggleDrawer = (value) => {
@@ -117,8 +118,7 @@ export default class Menu extends Component {
         })
     }
 
-    metodo = (hola) => {
-        console.log("Refresh")
+    metodo = () => {
         this.setState({
             refresh: !this.state.refresh
         })
@@ -138,10 +138,22 @@ export default class Menu extends Component {
         })
     };
 
+    componentWillUnmount = () => {
+        console.log("Hola")
+    }
+
+    componentDidUpdate = () => {
+        if(this.state.deslog){
+            this.setState({
+                deslog: false
+            })
+        }
+    }
+
     render() {
         if(this.state.deslog){
-            window.location.href="/login"
-            // return <Navigate to={"/prueba"}/>
+            // window.location.href="/login"
+            return <Navigate to={"/login"}/>
         }
         return (
             <div>
