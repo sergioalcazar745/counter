@@ -138,10 +138,6 @@ export default class Menu extends Component {
         })
     };
 
-    componentWillUnmount = () => {
-        console.log("Hola")
-    }
-
     componentDidUpdate = () => {
         if(this.state.deslog){
             this.setState({
