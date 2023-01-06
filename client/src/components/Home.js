@@ -3,15 +3,28 @@ import './../assests/css/Home.css';
 import Button from '@mui/material/Button';
 import $ from 'jquery';
 import io from "socket.io-client";
+import EventoService from './../services/EventoService'
+import TemporizadorService from './../services/TemporizadorService'
+import CategoriaService from '../services/CategoriaService';
 
 const socket = io('http://localhost:4000/')
+
+const serviceEventos = new EventoService()
+const serviceTemporizadores = new TemporizadorService()
+const serviceCategorias = new CategoriaService()
 
 export default class Home extends Component {    
 
     state = {
         clock: 0,
         segundos: 0,
-        pausar:false
+        hora: null,
+        pausar:false,
+        evento: null,
+        listaTimers: [],
+        status: false,
+        lengthListaTimers: 0,
+        cont: 0
     }
 
     numero = React.createRef();
@@ -19,7 +32,7 @@ export default class Home extends Component {
     comenzar = (e) => {
       e.preventDefault();
       console.log("Hola")
-      socket.emit('contador', this.numero.current.value);
+      socket.emit('contador', this.state.listaTimers);
       $("#btnEnviar").hide();
       $("#btnPausar").show();
       $("#texto").val("");
@@ -59,7 +72,9 @@ export default class Home extends Component {
       }
     
     timer = (numero) => {
-        const convertedTime = this.secConverter(numero, 'sec')
+        console.log(numero)
+        const convertedTime = this.secConverter(numero * 60)
+        console.log(convertedTime)
     
         if(convertedTime.hours.toString().length == 1){
           var stringHours = "0" + convertedTime.hours.toString();
@@ -81,7 +96,6 @@ export default class Home extends Component {
         }else{
           convertedTime.seconds = convertedTime.seconds.toString()
         }
-    
         this.state.clock = convertedTime
         this.setState({clock: convertedTime})
         $("#clock").show();
@@ -90,12 +104,15 @@ export default class Home extends Component {
     componentDidMount = () =>{
         //Quitar
         localStorage.setItem("comienzo", "comienzo")
+        this.getAllEventos();
+        this.getAllTemporizadores();
         $("#btnPausar").hide();
         $("#btnReanudar").hide();
-        const receiveMessage = (segundos) => {
-            this.state.segundos = segundos;
-            this.setState({segundos: this.state.segundos})
-            this.timer(segundos);
+        const receiveMessage = (respuesta) => {
+            this.state.segundos = respuesta.numero;
+            this.state.hora = respuesta.hora
+            this.setState({segundos: this.state.segundos, hora: this.state.hora})
+            this.timer(respuesta.numero);
         }
 
         socket.on('cont', receiveMessage);
@@ -105,9 +122,79 @@ export default class Home extends Component {
         }
     }
 
+    getAllEventos = () => {
+      serviceEventos.getAllEventos().then(result => {
+        this.setState({
+          evento: result[0]
+        })
+      })
+    }
+
+    getAllTemporizadores = () => {
+      serviceTemporizadores.getAllTemporizadores().then(result => {
+        this.state.lengthListaTimers = result.length
+        this.setState({
+          lengthListaTimers: this.state.lengthListaTimers
+        })
+        console.log("")
+        this.createListTimers(result)
+      })
+    }
+
+    getByIdCategoria = (id, inicio) => {
+      console.log("Id: " + id)
+      serviceCategorias.getByIdCategoria(id).then(result => {
+        this.state.cont = this.state.cont + 1
+        this.setState({
+          cont: this.state.cont
+        })
+        console.log(result.categoria)
+        this.listTimers({inicio: inicio, duracion: result.duracion * 60})
+        if(this.state.cont === this.state.lengthListaTimers){
+          this.setState({
+            status: true,
+          })
+        }
+      })
+    }
+
+    listTimers = (result) => {
+      this.state.listaTimers.push(result)
+      this.setState({
+        listaTimers: this.state.listaTimers
+      })
+    }
+
+    createListTimers = (lista) => {
+      for (let i = 0; i < lista.length; i++) {
+        this.getByIdCategoria(lista[i].idCategoria, lista[i].inicio)    
+      }
+    }
+
+    formatDate = (date) => {
+      let resultado = []
+      let fecha = date.substring(0, date.indexOf("T"))
+      let hora = date.substring(date.indexOf("T") + 1, date.length - 3)
+      resultado.push(fecha)
+      resultado.push(hora)
+      return resultado
+    }
+
     render() {
       return (
-        <div className='container-home'>               
+        <div className='container-home'>       
+          {
+            this.state.status &&
+            <>
+              <h1>{this.state.evento.nombreEvento}</h1>
+              <h2>{this.formatDate(this.state.evento.inicioEvento)[0]}</h2>
+              <h3>{this.formatDate(this.state.evento.inicioEvento)[1]} - {this.formatDate(this.state.evento.finEvento)[1]}</h3>
+            </>
+          }
+          {
+            this.state.clock != 0 &&
+            <h2 style={{color: 'red'}}>{this.state.hora}</h2>
+          }
           {
           this.state.clock != 0 &&
               <div className="clock">
@@ -128,7 +215,7 @@ export default class Home extends Component {
                       <div className="number">{this.state.clock.minutes[1]}</div>
                       </div>
                   </div>
-              <div className="tick">:</div>
+              {/* <div className="tick">:</div>
                   <div className="seconds">
                       <div className="first">
                       <div className="number">{this.state.clock.seconds[0]}</div>
@@ -136,7 +223,7 @@ export default class Home extends Component {
                       <div className="second infinite">
                       <div className="number">{this.state.clock.seconds[1]}</div>
                       </div>
-                  </div>
+                  </div> */}
               </div>
           }
           <br/>
@@ -144,7 +231,7 @@ export default class Home extends Component {
             localStorage.getItem("token") &&
             (
               <form style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <input id='texto' type="text" ref={this.numero} />
+              {/* <input id='texto' type="text" ref={this.numero} /> */}
               <div>
                 {localStorage.getItem("comienzo") ?
                   (<Button onClick={(e) => {
@@ -156,7 +243,7 @@ export default class Home extends Component {
                   </Button>) :
                   (
                     <div>
-                    {localStorage.getItem("reanudar") &&
+                    {/* {localStorage.getItem("reanudar") &&
                         (
                           <Button onClick={(e) => {
                             this.reanudar(e)
@@ -166,8 +253,8 @@ export default class Home extends Component {
                             Reanudar
                           </Button>
                         ) 
-                    }
-                    {
+                    } */}
+                    {/* {
                       localStorage.getItem("pausar") &&
                        (
                         <Button onClick={(e) => {
@@ -178,7 +265,7 @@ export default class Home extends Component {
                           variant="contained" color="error" style={{ margin: '10px' }}>
                           Pausar
                         </Button>)
-                    }
+                    } */}
                     </div>
                   )
                 }

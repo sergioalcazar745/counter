@@ -7,7 +7,7 @@ import Menu from './components/Menu';
 import Salas from './components/Salas';
 import Categorias from './components/Categorias';
 import Temporizador from './components/Temporizadores';
-import Evento from './components/Eventos';
+import ProtectedRoute from './components/ProtectedRoute';
 
 export default class Router extends Component {
     render() {
@@ -25,12 +25,13 @@ export default class Router extends Component {
                 <Routes>
                     <Route path='/' element={<Menu />}>
                         <Route path='' element={<GetOut />} />
-                        <Route path='salas' element={<Salas />} />
-                        <Route path='empresas' element={<Empresas />} />
-                        <Route path='categorias' element={<Categorias />} />
-                        <Route path='temporizadores' element={<Temporizador />} />
-                        <Route path='eventos' element={<Evento />} />
                         <Route path='login' element={<GetRecarga />} />
+                        <Route element={<ProtectedRoute/>}>
+                            <Route path='salas' element={<Salas />} />
+                            <Route path='empresas' element={<Empresas />} />
+                            <Route path='categorias' element={<Categorias />} />
+                            <Route path='temporizadores' element={<Temporizador />} />
+                        </Route>                        
                     </Route>
                 </Routes>
             </BrowserRouter>

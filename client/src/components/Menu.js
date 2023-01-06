@@ -94,14 +94,6 @@ export default class Menu extends Component {
                             <ListItemText primary={"Temporizadores"} />
                         </ListItemButton>
                     </ListItem>
-                    <ListItem sx={{ color: 'rgba(0, 0, 0, 0.54)' }} component={NavLink} to="/eventos" disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <CalendarMonthIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={"Eventos"} />
-                        </ListItemButton>
-                    </ListItem>
                 </List>
             </Box>
         </div>

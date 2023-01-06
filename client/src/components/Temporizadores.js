@@ -268,7 +268,7 @@ export default class Temporizadores extends Component {
                             margin="dense"
                             id="name"
                             label="Nombre de la empresa"
-                            type="text"
+                            type="datetime-local"
                             fullWidth
                             variant="standard"
                             inputRef={this.inicio}
