@@ -6,6 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import AddIcon from '@mui/icons-material/Add';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { Alert, Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Fab, ListItemAvatar, TextField, Zoom } from '@mui/material';
 
 const service = new SalaService();
@@ -148,9 +149,7 @@ export default class Salas extends Component {
                                 <ListItem component="div" disablePadding key={index} onClick={() => this.handleClickOpenDialogUpdate(sala.idSala, sala.nombreSala)}>
                                     <ListItemButton>
                                         <ListItemAvatar>
-                                            
-                                            
-                                            <h2>{sala.idSala}</h2>
+                                            <MeetingRoomIcon />
                                         </ListItemAvatar>
                                         <ListItemText primary={sala.nombreSala} />
                                     </ListItemButton>

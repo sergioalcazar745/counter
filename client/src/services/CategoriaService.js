@@ -13,6 +13,16 @@ export default class CategoriaService{
         });
     }
 
+    getByIdCategoria(id){
+        return new Promise(function(resolve) {
+            var request = Global.url + "api/categoriastimer/" + id;
+
+            axios.get(request).then(response => {
+                resolve(response.data)
+            });
+        });
+    }
+
     deleteCategoria(id){
         return new Promise(function(resolve){
             var request = Global.url + "api/categoriastimer/" + id;

@@ -1,6 +1,6 @@
 import express from "express";
 import morgan from "morgan";
-import { Server as SocketServer} from "socket.io";
+import { Server as SocketServer } from "socket.io";
 import http from "http";
 import cors from "cors";
 import { PORT } from "./config.js";
@@ -16,25 +16,45 @@ const io = new SocketServer(server, {
 app.use(cors())
 app.use(morgan('dev'))
 var intervalo = "";
+var contadorServer = [];
+var i = 0;
+
+function intervaloContador(){
+    var numero = contadorServer[i].duracion
+    intervalo = setInterval(() => {
+        if (numero != 0) {
+            numero = numero - 1;
+            io.emit("cont", { numero: numero, hora: contadorServer[i].inicio })
+        } else {
+            i ++;
+            clearInterval(intervalo)
+            if(i < contadorServer.length){                
+                intervaloContador();
+            }            
+        }
+    }, 1000)
+}
 
 
 io.on("connection", (socket) => {
-    console.log("Carga")
-    socket.on('contador', function( contador) {
-        if(contador != "pausa"){
-            var numero = contador
-            intervalo = setInterval(() => {
-                if(numero != 0){
-                    numero = numero - 1;
-                    io.emit("cont", numero)
-                }else{
-                    clearInterval(intervalo)
-                }          
-            } ,1000)
-        }else{
-            clearInterval(intervalo)
-        }         
-
+    socket.on('contador', function (contador) {
+        if (Array.isArray(contador)) {
+            contadorServer = contador
+            intervaloContador();
+        }
+        // if(contador != "pausa"){
+        //     var numero = contador
+        //     intervalo = setInterval(() => {
+        //         if(numero != 0){
+        //             numero = numero - 1;
+        //             io.emit("cont", numero)
+        //         }else{
+        //             clearInterval(intervalo)
+        //         }          
+        //     } ,1000)
+        // }else{
+        //     clearInterval(intervalo)
+        // }
     })
 
 })

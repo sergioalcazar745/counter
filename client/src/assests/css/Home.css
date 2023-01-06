@@ -68,11 +68,11 @@
 }
 
 .tick {
-  line-height: 17vh;
+  /* line-height: 17vh; */
 }
 
 .tick-hidden {
-  opacity: 0;
+  /*opacity: 0;*/
 }
 
 .move {
